@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addJob = void 0;
+exports.add = void 0;
 const jobs_1 = require("../models/jobs");
-exports.addJob = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.add = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const name = req.body['name'];
     const description = req.body['description'];
     const jobs = new jobs_1.default({

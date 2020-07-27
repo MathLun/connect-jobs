@@ -1,7 +1,7 @@
 import Jobs from '../models/jobs';
 import { Request, Response, NextFunction } from 'express';
 
-export const addJob = async (req: Request, res: Response, next: NextFunction) => {
+export const add = async (req: Request, res: Response, next: NextFunction) => {
 	const name = req.body['name'];
 	const description = req.body['description'];
 	const jobs = new Jobs({

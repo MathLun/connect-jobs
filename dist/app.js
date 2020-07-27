@@ -2,19 +2,25 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const body_parser_1 = require("body-parser");
+const mongoose = require("mongoose");
 const session = require("express-session");
 const cookie = require("cookie-parser");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const redis = require("redis");
 const connectRedis = require("connect-redis");
-const JobsControllers = require("./controllers/jobs");
+const connectMongo = require("connect-mongo");
+const routes_1 = require("./routes");
 const database = require("./config/database/database");
+/* Session Store */
 const RedisStore = connectRedis(session);
 const RedisClient = redis.createClient();
+const MongoStore = connectMongo(session);
 const app = express();
+/* Configuration */
 dotenv.config();
 database.connected;
+/* Middleware */
 app.use(cors());
 app.use(cookie());
 app.use(session({
@@ -22,22 +28,12 @@ app.use(session({
     saveUninitialized: true,
     resave: false,
     cookie: { secure: false },
-    store: new RedisStore({
-        client: RedisClient
+    store: new MongoStore({
+        mongooseConnection: mongoose.connection
     })
 }));
 app.use(body_parser_1.json());
 app.use(body_parser_1.urlencoded({ extended: true }));
-app.get('/', (_, res) => {
-    let users = [
-        { name: "matheus", age: 23 },
-        { name: "sheila", age: 23 },
-    ];
-    res.json(users);
-});
-app.get('/cookie', (req, res) => {
-    res.send(req.cookies);
-});
-app.post('/vagas', JobsControllers.addJob);
+app.use('/', routes_1.jobsRouter);
 exports.default = app;
 //# sourceMappingURL=app.js.map

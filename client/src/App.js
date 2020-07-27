@@ -2,26 +2,37 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function App() {
-  const [users, setUsers] = useState([]);
+ const [job, setJob] = useState({ 
+	 name: '', 
+	 description: '' 
+ });
+ const apiUrl = 'http://localhost:4000/vagas';
 
-  useEffect(() => {
-	const fetchData = async () => {
-	  let result = await axios('http://localhost:4000');
-	  setUsers(result.data);
-	};
-	
-	fetchData();
-  }, []);
+ const saveJob = (e) => {
+	e.preventDefault();
+	const data = {
+		name: job.name,
+		description: job.description
+	}
+	axios.post(apiUrl, data)
+ }
+
+ const onChange = (e) => {
+	  const { name, value } = e.target;
+	  setJob({...job, [name]: value});
+  }
 
   return (
     <div className="App">
       <header className="App-header">
-	  {users.map((user, index) => (
-		  <ul key={index}>
-			  <li>{user.name}</li>
-			  <p>{user.age}</p>
-		  </ul>
-	  ))}
+	  <form onSubmit={saveJob}>
+	  	<input type="text" name="name" id="name" placeholder="Name Job" value={job.name} onChange={onChange} />
+	  	<input type="text" name="description" id="description" value={job.description} onChange={onChange} />
+	  	<button type="submit">
+	  		save
+	  	</button>
+	  </form>
+
       </header>
     </div>
   );

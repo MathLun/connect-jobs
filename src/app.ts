@@ -12,6 +12,8 @@ import * as dotenv from 'dotenv';
 import * as redis from 'redis';
 import * as connectRedis from 'connect-redis';
 
+import * as JobsControllers from './controllers/jobs';
+
 import * as database from './config/database/database';
 
 const RedisStore = connectRedis(session);
@@ -34,18 +36,12 @@ app.use(session({
 	})
 }));
 app.use(json());
-app.use(urlencoded({ extended: false }));
+app.use(urlencoded({ extended: true }));
 
 app.get('/', (_, res: Response) => {
-	let users = [
-		{ name: "matheus", age: 23 },
-		{ name: "sheila", age: 23 },
-	];
-	res.json(users);
+	res.send('');
 })
 
-app.get('/cookie', (req: Request, res: Response) => {
-	res.send(req.cookies);
-})
+app.post('/vagas', JobsControllers.addJob);
 
 export default app;

@@ -8,6 +8,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const redis = require("redis");
 const connectRedis = require("connect-redis");
+const JobsControllers = require("./controllers/jobs");
 const database = require("./config/database/database");
 const RedisStore = connectRedis(session);
 const RedisClient = redis.createClient();
@@ -26,7 +27,7 @@ app.use(session({
     })
 }));
 app.use(body_parser_1.json());
-app.use(body_parser_1.urlencoded({ extended: false }));
+app.use(body_parser_1.urlencoded({ extended: true }));
 app.get('/', (_, res) => {
     let users = [
         { name: "matheus", age: 23 },
@@ -37,5 +38,6 @@ app.get('/', (_, res) => {
 app.get('/cookie', (req, res) => {
     res.send(req.cookies);
 });
+app.post('/vagas', JobsControllers.addJob);
 exports.default = app;
 //# sourceMappingURL=app.js.map

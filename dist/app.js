@@ -8,10 +8,12 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const redis = require("redis");
 const connectRedis = require("connect-redis");
+const database = require("./config/database/database");
 const RedisStore = connectRedis(session);
 const RedisClient = redis.createClient();
 const app = express();
 dotenv.config();
+database.connected;
 app.use(cors());
 app.use(cookie());
 app.use(session({

@@ -1,5 +1,9 @@
 import * as express from 'express';
-import { Application, Request, Response } from 'express';
+import { 
+	Application, 
+	Request, 
+	Response 
+} from 'express';
 import { json, urlencoded } from 'body-parser';
 import * as session from 'express-session';
 import * as cookie from 'cookie-parser';
@@ -8,12 +12,15 @@ import * as dotenv from 'dotenv';
 import * as redis from 'redis';
 import * as connectRedis from 'connect-redis';
 
+import * as database from './config/database/database';
+
 const RedisStore = connectRedis(session);
 const RedisClient = redis.createClient();
 
 const app: Application = express();
 
 dotenv.config();
+database.connected;
 
 app.use(cors());
 app.use(cookie());

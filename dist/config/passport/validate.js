@@ -9,22 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.add = exports.getOne = exports.getAll = void 0;
-const jobs_1 = require("../models/jobs");
-exports.getAll = (_, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const jobs = yield jobs_1.default.find();
-    res.status(200).send(jobs);
+exports.validatePassword = void 0;
+const bcrypt = require("bcrypt");
+exports.validatePassword = (password, user) => __awaiter(void 0, void 0, void 0, function* () {
+    const compare = yield bcrypt.compare(password, user.password);
+    return compare;
 });
-exports.getOne = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-});
-exports.add = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const name = req.body['name'];
-    const description = req.body['description'];
-    const jobs = new jobs_1.default({
-        name: name,
-        description: description
-    });
-    yield jobs.save((err, job) => !err ? res.json(job) : console.log(err));
-    res.end();
-});
-//# sourceMappingURL=jobs.js.map
+//# sourceMappingURL=validate.js.map

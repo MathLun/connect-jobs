@@ -9,22 +9,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.add = exports.getOne = exports.getAll = void 0;
-const jobs_1 = require("../models/jobs");
-exports.getAll = (_, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const jobs = yield jobs_1.default.find();
-    res.status(200).send(jobs);
+const bcrypt = require("bcrypt");
+const mongoose_1 = require("mongoose");
+const UsersSchema = new mongoose_1.Schema({
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    password: {
+        type: String,
+        required: true
+    }
 });
-exports.getOne = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-});
-exports.add = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const name = req.body['name'];
-    const description = req.body['description'];
-    const jobs = new jobs_1.default({
-        name: name,
-        description: description
-    });
-    yield jobs.save((err, job) => !err ? res.json(job) : console.log(err));
-    res.end();
-});
-//# sourceMappingURL=jobs.js.map
+UsersSchema.pre('save', (next) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = this;
+    const hash = yield bcrypt.hash(this.password, 10);
+    this.password = hash;
+    next();
+}));
+exports.default = mongoose_1.model("Users", UsersSchema);
+//# sourceMappingURL=users.js.map

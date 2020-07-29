@@ -9,22 +9,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.add = exports.getOne = exports.getAll = void 0;
-const jobs_1 = require("../models/jobs");
-exports.getAll = (_, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const jobs = yield jobs_1.default.find();
-    res.status(200).send(jobs);
+exports.jwtStrategy = void 0;
+const passportJwt = require("passport-jwt");
+const JwtStrategy = passportJwt.Strategy;
+const ExtractJwt = passportJwt.ExtractJwt;
+const OPTIONS_JWT = {
+    jwtFromRequest: ExtractJwt.fromUrlQueryParameter('secret_token'),
+    secretOrKey: process.env.SECRET_TOKEN || 'htam00',
+    issuer: process.env.ISSUER_EMAIL || 'matheuslunadev@gmail.com',
+    audience: process.env.AUDIENCE_SITE || ''
+};
+const CALLBACK_JWT = (token, done) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        return done(null, token.user);
+    }
+    catch (error) {
+        done(error);
+    }
 });
-exports.getOne = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-});
-exports.add = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const name = req.body['name'];
-    const description = req.body['description'];
-    const jobs = new jobs_1.default({
-        name: name,
-        description: description
-    });
-    yield jobs.save((err, job) => !err ? res.json(job) : console.log(err));
-    res.end();
-});
-//# sourceMappingURL=jobs.js.map
+exports.jwtStrategy = new JwtStrategy(OPTIONS_JWT, CALLBACK_JWT);
+//# sourceMappingURL=jwt.js.map

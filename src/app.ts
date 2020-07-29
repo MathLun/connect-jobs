@@ -10,15 +10,19 @@ import * as redis from 'redis';
 import * as connectRedis from 'connect-redis';
 import * as connectMongo  from 'connect-mongo';
 
-import { jobsRouter } from './routes';
+import { jobsRouter, 
+	 usersRouter } from './routes';
+
+import { ErrorHandler } from './utils/errors';
 import * as database from './config/database/database';
+import * as passport from './config/passport/passport';
+
+const app: Application = express();
 
 /* Session Store */
 const RedisStore = connectRedis(session);
 const RedisClient = redis.createClient();
 const MongoStore = connectMongo(session);
-
-const app: Application = express();
 
 /* Configuration */
 dotenv.config();
@@ -28,7 +32,7 @@ database.connected;
 app.use(cors());
 app.use(cookie());
 app.use(session({
-	secret: process.env.SESSION_SECRET,
+	secret: process.env.SESSION_SECRET || 'htam00',
 	saveUninitialized: true,
 	resave: false,
 	cookie: { secure: false },
@@ -37,9 +41,12 @@ app.use(session({
 	})
 
 }));
-app.use(json());
 app.use(urlencoded({ extended: true }));
 
-app.use('/', jobsRouter);
+app.use(ErrorHandler);
+
+/* Routes */
+app.use('/vagas', jobsRouter);
+app.use('/user', usersRouter);
 
 export default app;
